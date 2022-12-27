@@ -1,0 +1,27 @@
+
+.container {
+    width: 8rem;
+    height: 8rem;
+    background-color: #eee;
+    border-radius: 1rem;
+    text-align: center;
+    display: inline-grid;
+    align-items: center;
+    justify-items: center;
+    margin: 1rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.icon {
+    width: 5rem;
+    height: 5rem;
+}
+
+.name {
+    color: #333;
+    font-weight: bold;
+}
+.desc {
+    color: grey;
+}

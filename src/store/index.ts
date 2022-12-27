@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import Provider from './provider';
+import Wallet from './wallet';
 
 const store = configureStore({
     reducer: {
-        provider: Provider,
+        wallet: Wallet,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

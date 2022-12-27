@@ -1,30 +1,49 @@
-import { logout, setAccount } from "@/store/provider"
-import { ethers } from "ethers"
-import { useAppDispatch, useAppSelector } from "@/store/hook"
+import { useState } from "react"
 import { Button } from "antd"
+import { useAppSelector } from "@/store/hook"
+import WalletModal from "../walletModal"
+import styles from '@/assets/styles/walletInfo.module.scss'
+import { BigNumber, ethers } from "ethers"
 
 const WalletInfo = () => {
-    const dispatch = useAppDispatch()
-    const account = useAppSelector((state: any) => state.provider.account)
+    const [visiable, setVisiable] = useState(false)
+    const accounts = useAppSelector((state: any) => state.wallet.accounts)
+    const balance: BigNumber = useAppSelector((state: any) => state.wallet.balance)
+    const chainId = useAppSelector((state: any) => state.wallet.chainId)
+    const network = useAppSelector((state: any) => state.wallet.network)
+    const gasPrice = useAppSelector((state: any) => state.wallet.gasPrice)
+    const blockNumber = useAppSelector((state: any) => state.wallet.blockNumber)
+    const provider: ethers.providers.Web3Provider = useAppSelector((state: any) => state.wallet.provider)
 
     const connect = async () => {
-        const network = (window as any).ethereum
-        const provider = new ethers.providers.Web3Provider(network, "any")
-        let res = await provider.send("eth_requestAccounts", []);
-        console.log(res)
-        dispatch(setAccount(res[0]))
+        setVisiable(true)
     }
 
-    const disconnect = () => {
-        dispatch(logout())
-        console.log('disconnect')
+    const renderConnect = () => {
+
+        return (
+            <Button type="primary" onClick={connect}>connect</Button>
+        )
+    }
+
+    const renderWallet = () => {
+        return (
+            <div className={styles.info}>
+                <label>Account: {accounts}</label>
+                <label>Balance: {balance.toString()}</label>
+                <label>Network: {network}</label>
+                <label>ChainId: {chainId}</label>
+                <label>GasPrice: {gasPrice}</label>
+                <label>BlockNumber: {blockNumber}</label>
+            </div>
+        )
     }
 
     return (
-        <div>
+        <div className={styles.container}>
+            <WalletModal visiable={visiable} setVisible={setVisiable} />
             {
-                account ? <Button type="primary" onClick={connect}>connect</Button>
-                : <Button type="primary" onClick={disconnect}>Disconnect</Button>
+                accounts.length < 1 ? renderConnect() : renderWallet()
             }
         </div>
     )
